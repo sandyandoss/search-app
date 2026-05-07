@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Search App</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    input { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
+    .count { margin: 15px 0; color: #555; }
+    .article { margin-bottom: 30px; }
+    .article h2 { font-size: 20px; }
+    .article p { color: #444; }
+    mark { background-color: #f9c74f; padding: 0; }
+  </style>
+</head>
+<body>
+
+  <h1>Search</h1>
+  <input type="text" id="searchInput" placeholder="Search articles..." />
+  <div class="count" id="count"></div>
+  <div id="results"></div>
+
+  <script>
+    const articles = [
+      {
+        title: "Understanding CSS Grid Layout",
+        date: "Oct 09, 2018",
+        body: "CSS Grid Layout is a powerful tool for creating two-dimensional layouts on the web."
+      },
+      {
+        title: "Introduction to Flexbox",
+        date: "Jan 15, 2019",
+        body: "Flexbox is a one-dimensional layout method for arranging items in rows or columns."
+      },
+      {
+        title: "JavaScript Basics for Beginners",
+        date: "Mar 22, 2020",
+        body: "JavaScript is a programming language that adds interactivity to your website."
+      },
+      {
+        title: "React vs Vue vs Angular",
+        date: "Jun 10, 2021",
+        body: "Comparing the three most popular front-end frameworks for building web applications."
+      },
+      {
+        title: "How to use CSS Variables",
+        date: "Sep 05, 2022",
+        body: "CSS variables allow you to store values in one place and reuse them throughout your stylesheet."
+      }
+    ];
+
+    function highlight(text, keyword) {
+      if (!keyword) return text;
+      let regex = new RegExp(`(${keyword})`, "gi");
+      return text.replace(regex, "<mark>$1</mark>");
+    }
+
+    function renderArticles(keyword) {
+      const results = document.getElementById("results");
+      const count = document.getElementById("count");
+
+      let filtered = articles.filter(a =>
+        a.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        a.body.toLowerCase().includes(keyword.toLowerCase())
+      );
+
+      count.textContent = keyword
+        ? `${filtered.length} post(s) were found.`
+        : "";
+
+      results.innerHTML = filtered.map(a => `
+        <div class="article">
+          <h2>${highlight(a.title, keyword)}</h2>
+          <p><em>${a.date}</em></p>
+          <p>${highlight(a.body, keyword)}</p>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      renderArticles(this.value);
+    });
+  </script>
+
+</body>
+</html>
